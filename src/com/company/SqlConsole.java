@@ -70,4 +70,33 @@ public class SqlConsole {
         }
     }
 
+    public String searchRoom(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("What kind of room are you looking for?");
+        System.out.println("Please select a number for");
+        System.out.println("1: Single / 2: Double / 3: Twin / 4: Family /5:Executive suite room ");
+        int room_type = Integer.parseInt(scanner.nextLine());
+
+
+        System.out.println("Customer's name?");
+        String customer_name = scanner.nextLine();
+        System.out.println("Input social security number");
+        String social_secnr = scanner.nextLine();
+        System.out.println("And phone number");
+        String telephonenr = scanner.nextLine();
+
+        try {
+            statement = conn.prepareStatement("INSERT INTO customers(customer_id,customer_name,social_secnr, telephonenr) VALUES (?,?,?,?)");
+            statement.setInt(1, customer_id);
+            statement.setString(2, customer_name);
+            statement.setString(3, social_secnr);
+            statement.setString(4, telephonenr);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return social_secnr;
+    }
+
+
 }
