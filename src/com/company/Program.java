@@ -1,5 +1,5 @@
 package com.company;
-
+import java.sql.*;
 import java.util.Scanner;
 
 public class Program {
@@ -21,6 +21,9 @@ public class Program {
                     break;
 
                 case "2":
+                    int answerHotel = sqlConsole.searchRoom();
+                    sqlConsole.searchByHotelid(answerHotel);
+                    sqlConsole.searchResult();
 
                     break;
 
