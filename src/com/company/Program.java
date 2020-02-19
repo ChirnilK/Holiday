@@ -5,6 +5,12 @@ import java.util.Scanner;
 public class Program {
 
     SqlConsole sqlConsole = new SqlConsole();
+    SearchingRoom searchingRoom = new SearchingRoom(sqlConsole.getConn());
+    Registration registration = new Registration(sqlConsole.getConn());
+
+    private Connection conn = null;
+    private PreparedStatement statement;
+    private ResultSet resultSet;
 
 
     public void start() {
@@ -15,13 +21,13 @@ public class Program {
             String choice = scanner.nextLine();
             switch (choice) {
                 case "1":
-                    String registeredSocialnr = sqlConsole.registerCustomer();
-                    sqlConsole.searchBySocialSecnr(registeredSocialnr);
-                    sqlConsole.printResult();
+                    String registeredSocialnr = registration.registerCustomer();
+                    resultSet = registration.searchBySocialSecnr(registeredSocialnr);
+                    registration.printResult(resultSet);
                     break;
 
                 case "2":
-                    sqlConsole.searchRoom();
+                    String result = searchingRoom.searchRoom();
 
 
                     break;
