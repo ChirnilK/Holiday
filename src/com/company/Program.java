@@ -21,9 +21,8 @@ public class Program {
                     break;
 
                 case "2":
-                    int answerHotel = sqlConsole.searchRoom();
-                    sqlConsole.searchByHotelid(answerHotel);
-                    sqlConsole.searchResult();
+                    sqlConsole.searchRoom();
+
 
                     break;
 
