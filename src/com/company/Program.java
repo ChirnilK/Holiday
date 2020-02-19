@@ -1,5 +1,6 @@
 package com.company;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Program {
@@ -27,7 +28,8 @@ public class Program {
                     break;
 
                 case "2":
-                    String result = searchingRoom.searchRoom();
+                    ArrayList result = searchingRoom.searchRoom();
+                    searchingRoom.findOne(result);
 
 
                     break;
