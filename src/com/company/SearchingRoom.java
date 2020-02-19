@@ -32,10 +32,12 @@ public class SearchingRoom {
 
 
         try {
-            statement = conn.prepareStatement("select hotelroom_id, hotel_name, room_type from booked_list"+ "\n" +
-                    "where NOT(check_in=? BETWEEN check_in AND check_out" +"\n" +
-                    "OR check_out=? BETWEEN check_in AND check_out)" + "\n" +
-                    "and room_id=?");
+            statement = conn.prepareStatement("select hotelroom_id, hotel_name, room_type" + "\n"+
+                    "from all_room_list"+ "\n"+
+                    "where hotelroom_id not in(select hotelroom_id"+ "\n"+
+                    "from booked_list where (? BETWEEN check_in AND check_out"+ "\n"+
+                    "OR ? BETWEEN check_in AND check_out))"+ "\n"+
+                    "AND room_id=?");
 
             statement.setString(1, checkInDate);
             statement.setString(2, checkOutDate);
@@ -49,11 +51,11 @@ public class SearchingRoom {
         String row="";
 
         try{
+            System.out.println("You can book this/these hotel(s) between " +checkInDate+ " and " + checkOutDate);
             while (resultSet.next()) {
                 row = "Hotelroom id: " + resultSet.getInt("hotelroom_id")
                         + ", Hotel name: " + resultSet.getString("hotel_name")
                         + ", Room type: " + resultSet.getString("room_type");
-                System.out.println("You can book this/these hotel(s) between " +checkInDate+ " and " + checkOutDate);
                 System.out.println(row);
             }
         }catch (Exception ex) {
