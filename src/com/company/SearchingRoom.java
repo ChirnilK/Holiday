@@ -188,13 +188,13 @@ public class SearchingRoom {
                     "number_of_people, check_in, check_out) VALUES (?,?,?,?,?,?,?,?)");
 
             statement.setInt(1, book_id);
-            statement.setInt(1, customer_id);
-            statement.setInt(1, hotel_id);
-            statement.setInt(1, room_id);
-            statement.setInt(1, option_id);
-            statement.setInt(1, number_of_people);
-            statement.setString(2, check_in);
-            statement.setString(3, check_out);
+            statement.setInt(2, customer_id);
+            statement.setInt(3, hotel_id);
+            statement.setInt(4, room_id);
+            statement.setInt(5, option_id);
+            statement.setInt(6, number_of_people);
+            statement.setString(7, check_in);
+            statement.setString(8, check_out);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
