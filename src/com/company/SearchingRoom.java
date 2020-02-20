@@ -43,6 +43,31 @@ public class SearchingRoom {
                 if (checkOutDate.isAfter(endOfSeason)) {
                     System.out.println("Sorry! See you next year!");
                 } else {
+                    System.out.println("Do you want to use pool in your hotel? y/n");
+                    int pool = 0;
+                    String poolAnswer = scanner.nextLine();
+                    if (poolAnswer.equals("y")){
+                        pool = 1;
+                    }
+                    System.out.println("Do you want to have evening entertainment? y/n");
+                    int evening_entertainment = 0;
+                    String entertainment = scanner.nextLine();
+                    if (entertainment.equals("y")){
+                        evening_entertainment = 1;
+                    }
+                    System.out.println("Do you want to use kids club? y/n");
+                    int kids_club = 0;
+                    String kids = scanner.nextLine();
+                    if (kids.equals("y")){
+                        kids_club = 1;
+                    }
+                    System.out.println("Do you want to have restaurant in your hotel? y/n");
+                    int restaurant = 0;
+                    String eat = scanner.nextLine();
+                    if (eat.equals("y")){
+                        restaurant = 1;
+                    }
+
                     try {
                         statement = conn.prepareStatement("select hotelroom_id, hotel_name from all_room_list " + "\n" +
                                 "where hotelroom_id not in(select hotelroom_id from booked_list " + "\n" +
@@ -53,6 +78,11 @@ public class SearchingRoom {
                         statement.setString(1, checkOut);
                         statement.setString(2, checkIn);
                         statement.setInt(3, room_id);
+                        statement.setInt(4, pool);
+                        statement.setInt(5, evening_entertainment);
+                        statement.setInt(6, kids_club);
+                        statement.setInt(7, restaurant);
+
                         resultSet = statement.executeQuery();
 
                     } catch (SQLException e) {
