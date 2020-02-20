@@ -9,7 +9,7 @@ public class Program {
     SqlConsole sqlConsole = new SqlConsole();
     SearchingRoom searchingRoom = new SearchingRoom(sqlConsole.getConn());
     Registration registration = new Registration(sqlConsole.getConn());
-    Booking booking = new Booking(sqlConsole.getConn());
+    CancelingBook cancelingBook = new CancelingBook(sqlConsole.getConn());
 
     private Connection conn = null;
     private PreparedStatement statement;
@@ -72,6 +72,9 @@ public class Program {
 
                 case "3":
 
+                    resultSet = searchingRoom.searchByBookid(booking_id);
+
+
                 default:
                     System.out.println("Enter a number between 1 to 5 or 11");
                     break;
@@ -96,12 +99,11 @@ public class Program {
     private void adminMenu() {
         System.out.println("");
         System.out.println("--------------------------------------");
-        System.out.println("Input a number");
+        System.out.println("Choose a number");
         System.out.println("1 : Registering customer");
-        System.out.println("2 : Searching room & booking");
-        System.out.println("3 : Booking");
-        System.out.println("4 : Canceling book");
-        System.out.println("5 : Changing book");
+        System.out.println("2 : Searching room & cancelingBook");
+        System.out.println("3 : Canceling book");
+        System.out.println("4 : Changing book");
         System.out.println("11: Quit");
         System.out.println("--------------------------------------");
     }

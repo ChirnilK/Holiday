@@ -6,14 +6,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Booking {
+public class CancelingBook {
 
 
     private Connection conn;
     private PreparedStatement statement;
     private ResultSet resultSet;
 
-    public Booking(Connection mainConn) {
+    public CancelingBook(Connection mainConn) {
         conn = mainConn;
     }
 
