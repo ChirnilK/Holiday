@@ -1,4 +1,5 @@
 package com.company;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -13,8 +14,37 @@ public class Program {
     private PreparedStatement statement;
     private ResultSet resultSet;
 
+    public void startProgram() throws IOException {
+        boolean on = true;
+        while(on) {
+            startMenu();
+            Scanner scanner = new Scanner(System.in);
+            String choice = scanner.nextLine();
+            switch (choice) {
+                case "1":
+                    String beach = "Beach";
+                    start(beach);
+                    break;
 
-    public void start() {
+                case "2":
+                    String urban = "Urban";
+                    start(urban);
+                    break;
+
+                case "3":
+                    System.out.println("See you!");
+                    on = false;
+                    break;
+
+                default:
+                    System.out.println("Enter 1 or 2");
+                    break;
+            }
+        }
+    }
+
+
+    public void start(String purpose) throws IOException {
         boolean on = true;
         while (on) {
             adminMenu();
@@ -24,11 +54,13 @@ public class Program {
                 case "1":
                     String registeredSocialnr = registration.registerCustomer();
                     resultSet = registration.searchBySocialSecnr(registeredSocialnr);
-                    registration.printResult(resultSet);
-                    break;
+                    if (resultSet!= null) {
+                        registration.printResult(resultSet);
+                    }
+                        break;
 
                 case "2":
-                    ArrayList result = searchingRoom.searchRoom();
+                    ArrayList result = searchingRoom.searchRoom(purpose);
                     searchingRoom.findOne(result);
 
 
@@ -41,13 +73,26 @@ public class Program {
         }
     }
 
+    private void startMenu() {
+        System.out.println("");
+        System.out.println("----------------------------------");
+        System.out.println("           Skåne travel           ");
+        System.out.println("----------------------------------");
+        System.out.println("");
+        System.out.println("What is the purpose of your trip ?");
+        System.out.println("");
+        System.out.println("    Beach holidays     : Enter '1'");
+        System.out.println("      Urban trip       : Enter '2'");
+        System.out.println("            Quit       : Enter '3'");
+        System.out.println("----------------------------------");
+    }
 
     private void adminMenu() {
         System.out.println("");
         System.out.println("--------------------------------------");
         System.out.println("Input a number");
         System.out.println("1 : Registering customer");
-        System.out.println("2 : Searching room");
+        System.out.println("2 : Searching room & booking");
         System.out.println("3 : Booking");
         System.out.println("4 : Canceling book");
         System.out.println("5 : Changing book");
