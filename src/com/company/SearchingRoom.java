@@ -255,8 +255,10 @@ public class SearchingRoom {
         String people = (String) result.get(4);
         int number_of_people = Integer.parseInt(people);
 
-        int howManyDays = check_out - check_in;
+        var diff = Math.abs(check_out.getTime() - check_in.getTime());
 
+        var howManyDays = Math.ceil(diff/(1000 * 3600 * 24));
+        System.out.println(howManyDays);
 
         double roomFee = 0;
         if (room_id == 1 || room_id == 2) {
@@ -291,7 +293,9 @@ public class SearchingRoom {
         }
 
         double TotalPrice = totalRoomFee + totalOptionFee;
-        System.out.println("Total price : " + TotalPrice + "Kr");
+        System.out.println("====================================");
+        System.out.println(" Total price : " + TotalPrice + "Kr ");
+        System.out.println("====================================");
     }
 
 }
