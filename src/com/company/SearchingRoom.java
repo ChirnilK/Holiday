@@ -17,7 +17,7 @@ public class SearchingRoom {
         conn = mainConn;
     }
 
-    public ArrayList<Integer> searchRoom(String purpose) {
+    public ArrayList<String> searchRoom(String purpose) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("=== Searching for your best room ===");
         System.out.println("How many are you? Select a number");
@@ -43,46 +43,67 @@ public class SearchingRoom {
                 if (checkOutDate.isAfter(endOfSeason)) {
                     System.out.println("Sorry! See you next year!");
                 } else {
-                    System.out.println("Do you want to use pool in your hotel? y/n");
+                    System.out.println(" ====== Popular filters  =======" );
+                    System.out.println("Pool? y/n");
+                    Scanner filter = new Scanner(System.in);
+                    String poolAnswer = filter.nextLine();
                     int pool = 0;
-                    String poolAnswer = scanner.nextLine();
                     if (poolAnswer.equals("y")){
                         pool = 1;
                     }
-                    System.out.println("Do you want to have evening entertainment? y/n");
+
+                    System.out.println("Evening entertainment? y/n");
+                    String entertainment = filter.nextLine();
                     int evening_entertainment = 0;
-                    String entertainment = scanner.nextLine();
                     if (entertainment.equals("y")){
                         evening_entertainment = 1;
                     }
-                    System.out.println("Do you want to use kids club? y/n");
+
+                    System.out.println("Kids club? y/n");
+                    String kids = filter.nextLine();
                     int kids_club = 0;
-                    String kids = scanner.nextLine();
                     if (kids.equals("y")){
                         kids_club = 1;
                     }
-                    System.out.println("Do you want to have restaurant in your hotel? y/n");
+
+                    System.out.println("Restaurant? y/n");
+                    String eat = filter.nextLine();
                     int restaurant = 0;
-                    String eat = scanner.nextLine();
                     if (eat.equals("y")){
                         restaurant = 1;
                     }
 
+                    double km_to_beach = 100.0;
+                    double km_to_city = 100.0;
+                    if (purpose.equals("Beach")){
+                        km_to_beach = 2.0;
+                    }
+                    else if (purpose.equals("City")){
+                        km_to_city = 2.0;
+                    }
+
+                    System.out.println("Input a minimum number for guest-rating");
+                    int guest_rating = filter.nextInt();
+
                     try {
-                        statement = conn.prepareStatement("select hotelroom_id, hotel_name from all_room_list " + "\n" +
-                                "where hotelroom_id not in(select hotelroom_id from booked_list " + "\n" +
-                                "where not (check_in >= ? OR check_out <= ?) AND room_id = ?)");
+                        statement = conn.prepareStatement("SELECT * FROM all_room_booked_and_unbooked \n" +
+                                "WHERE room_id = ? and pool >= ?\n" +
+                                "AND kids_club >= ? AND evening_entertainment >= ?\n" +
+                                "and restaurant >= ? and  guest_rating >= ?\n" +
+                                "and km_to_beach <= ? and km_to_city <= ?\n" +
+                                "HAVING check_in IS NULL OR check_out <= ? OR check_in >= ?;");
 
-                        System.out.println(checkInDate);
-                        System.out.println(checkOutDate);
-                        statement.setString(1, checkOut);
-                        statement.setString(2, checkIn);
-                        statement.setInt(3, room_id);
-                        statement.setInt(4, pool);
-                        statement.setInt(5, evening_entertainment);
-                        statement.setInt(6, kids_club);
-                        statement.setInt(7, restaurant);
 
+                        statement.setInt(1, room_id);
+                        statement.setInt(2, pool);
+                        statement.setInt(3, kids_club);
+                        statement.setInt(4, evening_entertainment);
+                        statement.setInt(5, restaurant);
+                        statement.setInt(6,guest_rating);
+                        statement.setDouble(7, km_to_beach);
+                        statement.setDouble(8, km_to_city);
+                        statement.setString(9, checkOut);
+                        statement.setString(10, checkIn);
                         resultSet = statement.executeQuery();
 
                     } catch (SQLException e) {
@@ -90,14 +111,28 @@ public class SearchingRoom {
                     }
 
                     String row = "";
-                    ArrayList<Integer> result = new ArrayList<>();
+                    ArrayList<String> result = new ArrayList<>();
 
                     try {
                         System.out.println("You can book this/these hotel(s) between " + checkInDate + " and " + checkOutDate);
+                        String numPeople = String.valueOf(numberOfPeople);
+                        result.add(numPeople);
+                        result.add(checkIn);
+                        result.add(checkOut);
+                        String roomid = String.valueOf(room_id);
+                        result.add(roomid);
                         while (resultSet.next()) {
-                            result.add(resultSet.getInt("hotelroom_id"));
                             row = "Hotelroom id: " + resultSet.getInt("hotelroom_id")
-                                    + ", Hotel name: " + resultSet.getString("hotel_name");
+                                    + ", Hotel name: " + resultSet.getString("hotel_name")
+                                    + ", Room type: " + resultSet.getString("room_type")
+                                    + ", Room price/night: " + resultSet.getDouble("room_price_per_night")
+                                    + ", Distance to beach: " + resultSet.getDouble("km_to_beach")
+                                    + ", Distance to city: " + resultSet.getDouble("km_to_city")
+                                    + ", Guest rating: " + resultSet.getInt("guest_rating")
+                                    + ", Pool: " + resultSet.getInt("pool")
+                                    + ", Evening entertainment: " + resultSet.getInt("evening_entertainment")
+                                    + ", Kids club: " + resultSet.getInt("kids_club")
+                                    + ", Restaurant: " + resultSet.getInt("restaurant");
                             System.out.println(row);
                         }
                     } catch (Exception ex) {
@@ -110,8 +145,59 @@ public class SearchingRoom {
     return null;
     }
 
-            public void findOne(ArrayList result) {
+    public void bookRoom(ArrayList result) {
+        int number_of_people = (int) result.get(0);
+        String check_in = (String) result.get(1);
+        String check_out = (String) result.get(2);
+        int room_id = (int) result.get(3);
+        System.out.println("Input the Hotelroom_id number for proceeding to book your hotel");
+        Scanner sc = new Scanner(System.in);
+        int hotel_id = sc.nextInt();
+        System.out.println("Family room and Executive suite room can get extra bed, 500kr/bed.");
+        System.out.println("Do you want to have one? y/n");
+        String extrabed = sc.nextLine();
 
-                System.out.println(result);
+        System.out.println("Will you have half pension or full pension?");
+        System.out.println("h:half pension(500kr/person) / f:full pension(700kr/person) / n: don't need ");
+        String pension = sc.nextLine();
+        int option_id = 0;
+        if (extrabed.equals("y") && (pension.equals("n"))) {
+            option_id = 1;
+        }
+        else if (extrabed.equals("y") && (pension.equals("h"))) {
+            option_id = 4;
+        }
+        else if(extrabed.equals("y") && (pension.equals("f"))) {
+            option_id = 5;
+        }
+        else if (extrabed.equals("n") && (pension.equals("n"))) {
+            option_id = 0;
+        }
+        else if(extrabed.equals("n") && (pension.equals("h"))) {
+            option_id = 2;
+        }
+        else if(extrabed.equals("n") && (pension.equals("f"))) {
+            option_id = 3;
+        }
+        else {
+            System.out.println("Please input information properly");
             }
-    }
+
+       try {
+            statement = conn.prepareStatement("INSERT INTO bookings(book_id,customer_id, hotel_id, room_id, option_id," +
+                    "number_of_people, check_in, check_out) VALUES (?,?,?,?,?,?,?,?)");
+
+            statement.setInt(1, book_id);
+            statement.setInt(1, customer_id);
+            statement.setInt(1, hotel_id);
+            statement.setInt(1, room_id);
+            statement.setInt(1, option_id);
+            statement.setInt(1, number_of_people);
+            statement.setString(2, check_in);
+            statement.setString(3, check_out);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+}
+}

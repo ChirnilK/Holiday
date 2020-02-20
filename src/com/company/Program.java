@@ -9,6 +9,7 @@ public class Program {
     SqlConsole sqlConsole = new SqlConsole();
     SearchingRoom searchingRoom = new SearchingRoom(sqlConsole.getConn());
     Registration registration = new Registration(sqlConsole.getConn());
+    Booking booking = new Booking(sqlConsole.getConn());
 
     private Connection conn = null;
     private PreparedStatement statement;
@@ -61,10 +62,10 @@ public class Program {
 
                 case "2":
                     ArrayList result = searchingRoom.searchRoom(purpose);
-                    searchingRoom.findOne(result);
-
-
+                    searchingRoom.bookRoom(result);
                     break;
+
+                case "3":
 
                 default:
                     System.out.println("Enter a number between 1 to 5 or 11");
