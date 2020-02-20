@@ -62,8 +62,13 @@ public class Program {
 
                 case "2":
                     ArrayList result = searchingRoom.searchRoom(purpose);
-                    searchingRoom.bookRoom(result);
-                    break;
+                    int booking_id = searchingRoom.bookRoom(result);
+                    resultSet = searchingRoom.searchByBookid(booking_id);
+                    if (resultSet!= null) {
+                        ArrayList forPrice = searchingRoom.bookingResult(resultSet);
+                        searchingRoom.bookingTotalPrice(forPrice);
+                    }
+                        break;
 
                 case "3":
 
@@ -82,9 +87,9 @@ public class Program {
         System.out.println("");
         System.out.println("What is the purpose of your trip ?");
         System.out.println("");
-        System.out.println("    Beach holidays     : Enter '1'");
-        System.out.println("      Urban trip       : Enter '2'");
-        System.out.println("            Quit       : Enter '3'");
+        System.out.println("  Beach holidays     : Enter '1'  ");
+        System.out.println("    Urban trip       : Enter '2'  ");
+        System.out.println("          Quit       : Enter '3'  ");
         System.out.println("----------------------------------");
     }
 

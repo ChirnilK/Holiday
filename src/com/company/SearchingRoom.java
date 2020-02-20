@@ -27,8 +27,7 @@ public class SearchingRoom {
         int room_id = scanner.nextInt();
         if (numberOfPeople > room_id) {
             System.out.println("The max people in this room is" + numberOfPeople + ". Please change room.");
-        }
-        else{
+        } else {
             System.out.println("When is your check in date? Input ex; 2020-01-30");
             String checkIn = scanner.next();
             LocalDate checkInDate = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(checkIn));
@@ -43,42 +42,41 @@ public class SearchingRoom {
                 if (checkOutDate.isAfter(endOfSeason)) {
                     System.out.println("Sorry! See you next year!");
                 } else {
-                    System.out.println(" ====== Popular filters  =======" );
+                    System.out.println(" ====== Popular filters  =======");
                     System.out.println("Pool? y/n");
                     Scanner filter = new Scanner(System.in);
                     String poolAnswer = filter.nextLine();
                     int pool = 0;
-                    if (poolAnswer.equals("y")){
+                    if (poolAnswer.equals("y")) {
                         pool = 1;
                     }
 
                     System.out.println("Evening entertainment? y/n");
                     String entertainment = filter.nextLine();
                     int evening_entertainment = 0;
-                    if (entertainment.equals("y")){
+                    if (entertainment.equals("y")) {
                         evening_entertainment = 1;
                     }
 
                     System.out.println("Kids club? y/n");
                     String kids = filter.nextLine();
                     int kids_club = 0;
-                    if (kids.equals("y")){
+                    if (kids.equals("y")) {
                         kids_club = 1;
                     }
 
                     System.out.println("Restaurant? y/n");
                     String eat = filter.nextLine();
                     int restaurant = 0;
-                    if (eat.equals("y")){
+                    if (eat.equals("y")) {
                         restaurant = 1;
                     }
 
                     double km_to_beach = 100.0;
                     double km_to_city = 100.0;
-                    if (purpose.equals("Beach")){
+                    if (purpose.equals("Beach")) {
                         km_to_beach = 2.0;
-                    }
-                    else if (purpose.equals("City")){
+                    } else if (purpose.equals("City")) {
                         km_to_city = 2.0;
                     }
 
@@ -99,7 +97,7 @@ public class SearchingRoom {
                         statement.setInt(3, kids_club);
                         statement.setInt(4, evening_entertainment);
                         statement.setInt(5, restaurant);
-                        statement.setInt(6,guest_rating);
+                        statement.setInt(6, guest_rating);
                         statement.setDouble(7, km_to_beach);
                         statement.setDouble(8, km_to_city);
                         statement.setString(9, checkOut);
@@ -142,48 +140,52 @@ public class SearchingRoom {
                 }
             }
         }
-    return null;
+        return null;
     }
 
-    public void bookRoom(ArrayList result) {
-        int number_of_people = (int) result.get(0);
+    public int bookRoom(ArrayList result) {
+        System.out.println("");
+        String numberOfPeople = (String) result.get(0);
+        int number_of_people = Integer.parseInt(numberOfPeople);
         String check_in = (String) result.get(1);
         String check_out = (String) result.get(2);
-        int room_id = (int) result.get(3);
+        String roomid = (String) result.get(3);
+        int room_id = Integer.parseInt(roomid);
         System.out.println("Input the Hotelroom_id number for proceeding to book your hotel");
         Scanner sc = new Scanner(System.in);
         int hotel_id = sc.nextInt();
         System.out.println("Family room and Executive suite room can get extra bed, 500kr/bed.");
         System.out.println("Do you want to have one? y/n");
-        String extrabed = sc.nextLine();
+        Scanner booksc = new Scanner(System.in);
+        String extrabed = booksc.nextLine();
 
         System.out.println("Will you have half pension or full pension?");
         System.out.println("h:half pension(500kr/person) / f:full pension(700kr/person) / n: don't need ");
-        String pension = sc.nextLine();
+        String pension = booksc.nextLine();
         int option_id = 0;
         if (extrabed.equals("y") && (pension.equals("n"))) {
             option_id = 1;
-        }
-        else if (extrabed.equals("y") && (pension.equals("h"))) {
+        } else if (extrabed.equals("y") && (pension.equals("h"))) {
             option_id = 4;
-        }
-        else if(extrabed.equals("y") && (pension.equals("f"))) {
+        } else if (extrabed.equals("y") && (pension.equals("f"))) {
             option_id = 5;
-        }
-        else if (extrabed.equals("n") && (pension.equals("n"))) {
+        } else if (extrabed.equals("n") && (pension.equals("n"))) {
             option_id = 0;
-        }
-        else if(extrabed.equals("n") && (pension.equals("h"))) {
+        } else if (extrabed.equals("n") && (pension.equals("h"))) {
             option_id = 2;
-        }
-        else if(extrabed.equals("n") && (pension.equals("f"))) {
+        } else if (extrabed.equals("n") && (pension.equals("f"))) {
             option_id = 3;
-        }
-        else {
+        } else {
             System.out.println("Please input information properly");
-            }
+        }
 
-       try {
+        System.out.println("Input book-id");
+        int book_id = booksc.nextInt();
+
+        System.out.println("Input customer-id");
+        int customer_id = booksc.nextInt();
+
+        try {
             statement = conn.prepareStatement("INSERT INTO bookings(book_id,customer_id, hotel_id, room_id, option_id," +
                     "number_of_people, check_in, check_out) VALUES (?,?,?,?,?,?,?,?)");
 
@@ -199,5 +201,97 @@ public class SearchingRoom {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-}
+        return book_id;
+    }
+
+    public ResultSet searchByBookid(int book_id) {
+        try {
+            statement = conn.prepareStatement("SELECT * FROM bookings WHERE book_id = ?");
+            statement.setInt(1, book_id);
+            return statement.executeQuery();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public ArrayList<String > bookingResult(ResultSet resultSet) {
+        try {
+            ArrayList<String> result= new ArrayList<>();
+            while (resultSet.next()) {
+                result.add(String.valueOf(resultSet.getInt("room_id")));
+                result.add(String.valueOf(resultSet.getInt("option_id")));
+                result.add(resultSet.getString("check_in"));
+                result.add(resultSet.getString("check_out"));
+                result.add(String.valueOf(resultSet.getInt("number_of_people")));
+                String row = "Book_id: " + resultSet.getInt("book_id")
+                        + ", Customer_id: " + resultSet.getInt("customer_id")
+                        + ", Hotel_id: " + resultSet.getInt("hotel_id")
+                        + ", Room_id: " + resultSet.getInt("room_id")
+                        + ", Option_id: " + resultSet.getInt("option_id")
+                        + ", Number of People: " + resultSet.getInt("number_of_people")
+                        + ", Check-in date: " + resultSet.getString("check_in")
+                        + ", Check-out date: " + resultSet.getString("check_out") + ".";
+                System.out.println(row);
+            }
+            return result;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public void bookingTotalPrice(ArrayList result) {
+
+        String roomid = (String) result.get(0);
+        int room_id = Integer.parseInt(roomid);
+        String op = (String) result.get(1);
+        int option_id = Integer.parseInt(op);
+        String checkin = (String) result.get(2);
+        Date check_in = Date.valueOf(checkin);
+        String checkout = (String) result.get(3);
+        Date check_out = Date.valueOf(checkout);
+        String people = (String) result.get(4);
+        int number_of_people = Integer.parseInt(people);
+
+        int howManyDays = check_out - check_in;
+
+
+        double roomFee = 0;
+        if (room_id == 1 || room_id == 2) {
+            roomFee = 1200;
+        } else if (room_id == 3) {
+            roomFee = 1300;
+        } else if (room_id == 4) {
+            roomFee = 1800;
+        } else if (room_id == 5) {
+            roomFee = 2500;
+        }
+        double totalRoomFee = roomFee * howManyDays;
+
+        double optionFee = 0;
+        double totalOptionFee = 0;
+
+        if (option_id == 1) {
+            optionFee = 500;
+            totalOptionFee = optionFee;
+        } else if (option_id == 2) {
+            optionFee = 500;
+            totalOptionFee = optionFee * number_of_people;
+        } else if (option_id == 3) {
+            optionFee = 700;
+            totalOptionFee = optionFee * number_of_people;
+        } else if (option_id == 4) {
+            optionFee = 1000;
+            totalOptionFee = optionFee + (number_of_people - 1) * 500;
+        } else if (option_id == 5) {
+            optionFee = 1200;
+            totalOptionFee = optionFee + (number_of_people - 1) * 700;
+        }
+
+        double TotalPrice = totalRoomFee + totalOptionFee;
+        System.out.println("Total price : " + TotalPrice + "Kr");
+    }
+
 }
