@@ -38,7 +38,6 @@ public class CancellingRescheduling {
     }
 
     public void rescheduleCheck(ArrayList info, String checkIn, String checkOut){
-        System.out.println(info);
         System.out.println("");
         String  hotelid = (String) info.get(5);
         int hotel_id = Integer.parseInt(hotelid);
@@ -85,15 +84,19 @@ public class CancellingRescheduling {
         }
     }
 
-    public void reschedule(int book_id, String checkIn, String checkOut){
+    public void reschedule(int book_id, String checkIn, String checkOut) {
+
         try {
-            statement = conn.prepareStatement("INSERT INTO bookings set
+            statement = conn.prepareStatement("update bookings set check_in = ? , check_out = ? where book_id = ?;");
 
             statement.setString(1, checkIn);
             statement.setString(2, checkOut);
-            INSERT INTO table_name (column1, column2, column3, ...)
-            VALUES (value1, value2, value3, ...);
-
+            statement.setInt(3, book_id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 

@@ -1,4 +1,5 @@
 package com.company;
+import javax.swing.*;
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
@@ -105,13 +106,23 @@ public class Program {
                                 }
                                 else{
                                     cancellingRescheduling.rescheduleCheck(book_info, newCheckIn, newCheckOut);
-                                    System.out.println("Is this ok?");
-                                    String lastCheck = reschedule.nextLine();
+                                    System.out.println("Is this ok? y/n");
+                                    Scanner resche = new Scanner(System.in);
+                                    String lastCheck = resche.nextLine();
                                     if (lastCheck.equals("y")){
-
+                                        cancellingRescheduling.reschedule(changeBook, newCheckIn, newCheckOut);
+                                        resultSet = searchingRoom.searchByBookid(changeBook);
+                                        searchingRoom.bookingResult(resultSet);
+                                        break;
+                                    }
+                                    else if(lastCheck.equals("n")){
+                                        System.out.println("Please contact us again.");
+                                        break;
+                                    }
+                                    else{
+                                        break;
                                     }
                                 }
-
                             }
                         }
                         else{
