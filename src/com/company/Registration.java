@@ -19,8 +19,6 @@ public class Registration {
 
     public String registerCustomer() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Input customer's id");
-        int customer_id = Integer.parseInt(scanner.nextLine());
         System.out.println("Customer's name?");
         String customer_name = scanner.nextLine();
         System.out.println("Input social security number");
@@ -28,11 +26,10 @@ public class Registration {
         System.out.println("And phone number");
         String telephonenr = scanner.nextLine();
         try {
-            statement = conn.prepareStatement("INSERT INTO customers(customer_id,customer_name,social_secnr, telephonenr) VALUES (?,?,?,?)");
-            statement.setInt(1, customer_id);
-            statement.setString(2, customer_name);
-            statement.setString(3, social_secnr);
-            statement.setString(4, telephonenr);
+            statement = conn.prepareStatement("INSERT INTO customers(customer_name,social_secnr, telephonenr) VALUES (?,?,?)");
+            statement.setString(1, customer_name);
+            statement.setString(2, social_secnr);
+            statement.setString(3, telephonenr);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -66,5 +63,4 @@ public class Registration {
             ex.printStackTrace();
         }
     }
-
 }

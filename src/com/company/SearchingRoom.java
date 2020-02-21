@@ -223,7 +223,7 @@ public class SearchingRoom {
     public ArrayList<String > bookingResult(ResultSet resultSet) {
         try {
             ArrayList<String> result= new ArrayList<>();
-            System.out.println("===== Your book information =====");
+            System.out.println("===== Your booking information =====");
             while (resultSet.next()) {
                 result.add(String.valueOf(resultSet.getInt("room_id")));
                 result.add(String.valueOf(resultSet.getInt("option_id")));

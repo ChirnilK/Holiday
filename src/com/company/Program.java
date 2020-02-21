@@ -28,27 +28,27 @@ public class Program {
                 case "1":
                     String registeredSocialnr = registration.registerCustomer();
                     resultSet = registration.searchBySocialSecnr(registeredSocialnr);
-                    if (resultSet!= null) {
+                    if (resultSet != null) {
                         registration.printResult(resultSet);
                     }
-                        break;
+                    break;
 
                 case "2":
                     String purpose = startProgram();
                     ArrayList result = searchingRoom.searchRoom(purpose);
                     int booking_id = searchingRoom.bookRoom(result);
                     resultSet = searchingRoom.searchByBookid(booking_id);
-                    if (resultSet!= null) {
+                    if (resultSet != null) {
                         ArrayList forPrice = searchingRoom.bookingResult(resultSet);
                         searchingRoom.bookingTotalPrice(forPrice);
                     }
-                        break;
+                    break;
 
                 case "3":
                     Scanner scan = new Scanner(System.in);
                     System.out.println("Do you want to cancel your book? y/n");
                     String answer = scan.nextLine();
-                    if (answer.equals("y")){
+                    if (answer.equals("y")) {
                         System.out.println("Input book-id");
                         int cancelBook = Integer.parseInt(scan.nextLine());
                         resultSet = searchingRoom.searchByBookid(cancelBook);
@@ -66,15 +66,13 @@ public class Program {
                             System.out.println("");
                             searchingRoom.bookingResult(resultSet);
 
-                        }
-                        else if(book.equals("n")) {
+                        } else if (book.equals("n")) {
                             break;
                         }
-                    }
-                    else{
+                    } else {
                         System.out.println("See you!");
                     }
-                        break;
+                    break;
 
                 case "4":
                     Scanner reschedule = new Scanner(System.in);
@@ -102,43 +100,45 @@ public class Program {
                                 LocalDate endOfSeason = LocalDate.of(2020, 7, 30);
                                 if (newCheckOutDate.isAfter(endOfSeason)) {
                                     System.out.println("Sorry! See you next year!");
-                                }
-                                else{
+                                } else {
                                     cancellingRescheduling.rescheduleCheck(book_info, newCheckIn, newCheckOut);
                                     System.out.println("Is this ok? y/n");
                                     Scanner resche = new Scanner(System.in);
                                     String lastCheck = resche.nextLine();
-                                    if (lastCheck.equals("y")){
+                                    if (lastCheck.equals("y")) {
                                         cancellingRescheduling.reschedule(changeBook, newCheckIn, newCheckOut);
                                         resultSet = searchingRoom.searchByBookid(changeBook);
                                         searchingRoom.bookingResult(resultSet);
                                         break;
-                                    }
-                                    else if(lastCheck.equals("n")){
+                                    } else if (lastCheck.equals("n")) {
                                         System.out.println("Please contact us again.");
                                         break;
-                                    }
-                                    else{
+                                    } else {
                                         break;
                                     }
                                 }
                             }
                         }
-                        else{
-                            System.out.println("See you!");
-                        }
                     }
+                    else{
+                        System.out.println("See you!");
+                        }
+                case "9":
+                    on = false;
+                    System.exit(0);
+                    break;
 
                 default:
+                    System.out.println("Select a number 1-4 or 9 to quit");
                     break;
             }
         }
     }
 
     private String startProgram() throws IOException {
-        boolean on = true;
+        boolean login = true;
         String purpose = "";
-        while (on) {
+        while (login) {
             searchMenu();
             Scanner scanner = new Scanner(System.in);
             String choice = scanner.nextLine();
@@ -154,18 +154,16 @@ public class Program {
                     purpose = urban;
                     break;
 
-                case "3":
-                    System.out.println("See you!");
-                    on = false;
-                    break;
-
                 default:
                     System.out.println("Enter 1 or 2");
                     break;
-            }
+                }
+            return purpose;
         }
-        return purpose;
+        return null;
     }
+
+
 
 
 
@@ -176,7 +174,6 @@ public class Program {
         System.out.println("");
         System.out.println("  Beach holidays     : Enter '1'  ");
         System.out.println("   Urban trip        : Enter '2'  ");
-        System.out.println("      Quit           : Enter '3'  ");
         System.out.println("----------------------------------");
     }
 
@@ -190,7 +187,7 @@ public class Program {
         System.out.println("2 : Searching & Booking room");
         System.out.println("3 : Cancellation of book");
         System.out.println("4 : Rescheduling book");
-        System.out.println("11: Quit");
+        System.out.println("9 : Quit");
         System.out.println("--------------------------------------");
     }
 }
