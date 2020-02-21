@@ -1,5 +1,4 @@
 package com.company;
-import javax.swing.*;
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
@@ -136,13 +135,14 @@ public class Program {
         }
     }
 
-    public String startProgram() throws IOException {
+    private String startProgram() throws IOException {
         boolean on = true;
+        String purpose = "";
         while (on) {
             searchMenu();
             Scanner scanner = new Scanner(System.in);
             String choice = scanner.nextLine();
-            String purpose = "";
+
             switch (choice) {
                 case "1":
                     String beach = "Beach";
@@ -163,9 +163,8 @@ public class Program {
                     System.out.println("Enter 1 or 2");
                     break;
             }
-            return purpose;
         }
-        return null;
+        return purpose;
     }
 
 
