@@ -102,8 +102,9 @@ public class SearchingRoom {
                         statement.setInt(6, guest_rating);
                         statement.setDouble(7, km_to_beach);
                         statement.setDouble(8, km_to_city);
-                        statement.setString(9, checkOut);
-                        statement.setString(10, checkIn);
+                        statement.setString(9, checkIn);
+                        statement.setString(10, checkOut);
+
                         resultSet = statement.executeQuery();
 
                     } catch (SQLException e) {
@@ -229,6 +230,8 @@ public class SearchingRoom {
                 result.add(resultSet.getString("check_in"));
                 result.add(resultSet.getString("check_out"));
                 result.add(String.valueOf(resultSet.getInt("number_of_people")));
+                result.add(String.valueOf(resultSet.getInt("hotel_id")));
+
                 String row = "Book_id: " + resultSet.getInt("book_id")
                         + ", Customer_id: " + resultSet.getInt("customer_id")
                         + ", Hotel_id: " + resultSet.getInt("hotel_id")

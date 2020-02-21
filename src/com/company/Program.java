@@ -84,32 +84,42 @@ public class Program {
                         System.out.println("Input book-id");
                         int changeBook = Integer.parseInt(reschedule.nextLine());
                         resultSet = searchingRoom.searchByBookid(changeBook);
-                        searchingRoom.bookingResult(resultSet);
+                        ArrayList book_info = searchingRoom.bookingResult(resultSet);
                         System.out.println("");
                         System.out.println("Is this booking that you want to reschedule? y/n");
                         String change = reschedule.nextLine();
                         if (change.equals("y")) {
-                            System.out.println("When is your new check in date? Input ex; 2020-01-30");
+                            System.out.println("When is your new check-in date? Input ex; 2020-01-30");
                             String newCheckIn = reschedule.next();
                             LocalDate newCheckInDate = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(newCheckIn));
                             LocalDate startOfSeason = LocalDate.of(2020, 6, 1);
                             if (newCheckInDate.isBefore(startOfSeason)) {
                                 System.out.println("Please call us later!");
                             } else {
-                                System.out.println("When is your check out date? Input ex; 2020-01-30");
+                                System.out.println("When is your check-out date? Input ex; 2020-01-30");
                                 String newCheckOut = reschedule.next();
                                 LocalDate newCheckOutDate = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(newCheckOut));
                                 LocalDate endOfSeason = LocalDate.of(2020, 7, 30);
                                 if (newCheckOutDate.isAfter(endOfSeason)) {
                                     System.out.println("Sorry! See you next year!");
                                 }
+                                else{
+                                    cancellingRescheduling.rescheduleCheck(book_info, newCheckIn, newCheckOut);
+                                    System.out.println("Is this ok?");
+                                    String lastCheck = reschedule.nextLine();
+                                    if (lastCheck.equals("y")){
+
+                                    }
+                                }
 
                             }
+                        }
+                        else{
+                            System.out.println("See you!");
                         }
                     }
 
                 default:
-                    System.out.println("Enter a number between 1 to 5 or 11");
                     break;
             }
         }
