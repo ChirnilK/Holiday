@@ -20,7 +20,8 @@ public class SearchingRoom {
     public ArrayList<String> searchRoom(String purpose) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("=== Searching for your best room ===");
-        System.out.println("How many are you? Select a number");
+        System.out.println("");
+        System.out.println("How many are you? Input a number");
         int numberOfPeople = Integer.parseInt(scanner.nextLine());
         System.out.println("Which room do you want to stay?");
         System.out.println("1: Single room / 2: Double room / 3: Twin room / 4: Family room / 5: Executive suite room");
@@ -89,6 +90,7 @@ public class SearchingRoom {
                                 "AND kids_club >= ? AND evening_entertainment >= ?\n" +
                                 "and restaurant >= ? and  guest_rating >= ?\n" +
                                 "and km_to_beach <= ? and km_to_city <= ?\n" +
+                                "group by hotelroom_id\n" +
                                 "HAVING check_in IS NULL OR check_out <= ? OR check_in >= ?;");
 
 
@@ -156,6 +158,7 @@ public class SearchingRoom {
         int hotel_id = sc.nextInt();
         System.out.println("Family room and Executive suite room can get extra bed, 500kr/bed.");
         System.out.println("Do you want to have one? y/n");
+        System.out.println("(Press 'n' if your room type is not Family room or Executive suite room)");
         Scanner booksc = new Scanner(System.in);
         String extrabed = booksc.nextLine();
 
@@ -219,6 +222,7 @@ public class SearchingRoom {
     public ArrayList<String > bookingResult(ResultSet resultSet) {
         try {
             ArrayList<String> result= new ArrayList<>();
+            System.out.println("===== Your book information =====");
             while (resultSet.next()) {
                 result.add(String.valueOf(resultSet.getInt("room_id")));
                 result.add(String.valueOf(resultSet.getInt("option_id")));
@@ -258,7 +262,6 @@ public class SearchingRoom {
         var diff = Math.abs(check_out.getTime() - check_in.getTime());
 
         var howManyDays = Math.ceil(diff/(1000 * 3600 * 24));
-        System.out.println(howManyDays);
 
         double roomFee = 0;
         if (room_id == 1 || room_id == 2) {
@@ -293,9 +296,12 @@ public class SearchingRoom {
         }
 
         double TotalPrice = totalRoomFee + totalOptionFee;
+        System.out.println("");
         System.out.println("====================================");
         System.out.println(" Total price : " + TotalPrice + "Kr ");
         System.out.println("====================================");
+        System.out.println("Thank you!");
+        System.out.println("Have a great trip!");
     }
 
 }

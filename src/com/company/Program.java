@@ -1,6 +1,8 @@
 package com.company;
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,43 +11,14 @@ public class Program {
     SqlConsole sqlConsole = new SqlConsole();
     SearchingRoom searchingRoom = new SearchingRoom(sqlConsole.getConn());
     Registration registration = new Registration(sqlConsole.getConn());
-    CancelingBook cancelingBook = new CancelingBook(sqlConsole.getConn());
+    CancellingRescheduling cancellingRescheduling = new CancellingRescheduling(sqlConsole.getConn());
 
     private Connection conn = null;
     private PreparedStatement statement;
     private ResultSet resultSet;
 
-    public void startProgram() throws IOException {
-        boolean on = true;
-        while(on) {
-            startMenu();
-            Scanner scanner = new Scanner(System.in);
-            String choice = scanner.nextLine();
-            switch (choice) {
-                case "1":
-                    String beach = "Beach";
-                    start(beach);
-                    break;
 
-                case "2":
-                    String urban = "Urban";
-                    start(urban);
-                    break;
-
-                case "3":
-                    System.out.println("See you!");
-                    on = false;
-                    break;
-
-                default:
-                    System.out.println("Enter 1 or 2");
-                    break;
-            }
-        }
-    }
-
-
-    public void start(String purpose) throws IOException {
+    public void start() throws IOException {
         boolean on = true;
         while (on) {
             adminMenu();
@@ -61,6 +34,7 @@ public class Program {
                         break;
 
                 case "2":
+                    String purpose = startProgram();
                     ArrayList result = searchingRoom.searchRoom(purpose);
                     int booking_id = searchingRoom.bookRoom(result);
                     resultSet = searchingRoom.searchByBookid(booking_id);
@@ -71,9 +45,68 @@ public class Program {
                         break;
 
                 case "3":
+                    Scanner scan = new Scanner(System.in);
+                    System.out.println("Do you want to cancel your book? y/n");
+                    String answer = scan.nextLine();
+                    if (answer.equals("y")){
+                        System.out.println("Input book-id");
+                        int cancelBook = Integer.parseInt(scan.nextLine());
+                        resultSet = searchingRoom.searchByBookid(cancelBook);
+                        searchingRoom.bookingResult(resultSet);
+                        System.out.println("");
+                        System.out.println("Is this booking that you want to cancel? y/n");
+                        String book = scan.nextLine();
+                        if (book.equals("y")) {
+                            cancellingRescheduling.deleteBook(cancelBook);
+                            System.out.println("");
+                            System.out.println("Your booking was now cancelled");
+                            System.out.println("");
+                            resultSet = cancellingRescheduling.selectBookings();
+                            System.out.println("========== Bookings table ==========");
+                            System.out.println("");
+                            searchingRoom.bookingResult(resultSet);
 
-                    resultSet = searchingRoom.searchByBookid(booking_id);
+                        }
+                        else if(book.equals("n")) {
+                            break;
+                        }
+                    }
+                    else{
+                        System.out.println("See you!");
+                    }
+                        break;
 
+                case "4":
+                    Scanner reschedule = new Scanner(System.in);
+                    System.out.println("Do you want to reschedule your book? y/n");
+                    String res = reschedule.nextLine();
+                    if (res.equals("y")) {
+                        System.out.println("Input book-id");
+                        int changeBook = Integer.parseInt(reschedule.nextLine());
+                        resultSet = searchingRoom.searchByBookid(changeBook);
+                        searchingRoom.bookingResult(resultSet);
+                        System.out.println("");
+                        System.out.println("Is this booking that you want to reschedule? y/n");
+                        String change = reschedule.nextLine();
+                        if (change.equals("y")) {
+                            System.out.println("When is your new check in date? Input ex; 2020-01-30");
+                            String newCheckIn = reschedule.next();
+                            LocalDate newCheckInDate = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(newCheckIn));
+                            LocalDate startOfSeason = LocalDate.of(2020, 6, 1);
+                            if (newCheckInDate.isBefore(startOfSeason)) {
+                                System.out.println("Please call us later!");
+                            } else {
+                                System.out.println("When is your check out date? Input ex; 2020-01-30");
+                                String newCheckOut = reschedule.next();
+                                LocalDate newCheckOutDate = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(newCheckOut));
+                                LocalDate endOfSeason = LocalDate.of(2020, 7, 30);
+                                if (newCheckOutDate.isAfter(endOfSeason)) {
+                                    System.out.println("Sorry! See you next year!");
+                                }
+
+                            }
+                        }
+                    }
 
                 default:
                     System.out.println("Enter a number between 1 to 5 or 11");
@@ -82,28 +115,61 @@ public class Program {
         }
     }
 
-    private void startMenu() {
+    public String startProgram() throws IOException {
+        boolean on = true;
+        while (on) {
+            searchMenu();
+            Scanner scanner = new Scanner(System.in);
+            String choice = scanner.nextLine();
+            String purpose = "";
+            switch (choice) {
+                case "1":
+                    String beach = "Beach";
+                    purpose = beach;
+                    break;
+
+                case "2":
+                    String urban = "Urban";
+                    purpose = urban;
+                    break;
+
+                case "3":
+                    System.out.println("See you!");
+                    on = false;
+                    break;
+
+                default:
+                    System.out.println("Enter 1 or 2");
+                    break;
+            }
+            return purpose;
+        }
+        return null;
+    }
+
+
+
+    private void searchMenu() {
         System.out.println("");
         System.out.println("----------------------------------");
-        System.out.println("           Skåne travel           ");
-        System.out.println("----------------------------------");
-        System.out.println("");
         System.out.println("What is the purpose of your trip ?");
         System.out.println("");
         System.out.println("  Beach holidays     : Enter '1'  ");
-        System.out.println("    Urban trip       : Enter '2'  ");
-        System.out.println("          Quit       : Enter '3'  ");
+        System.out.println("   Urban trip        : Enter '2'  ");
+        System.out.println("      Quit           : Enter '3'  ");
         System.out.println("----------------------------------");
     }
 
     private void adminMenu() {
         System.out.println("");
         System.out.println("--------------------------------------");
+        System.out.println("           Skåne travel               ");
+        System.out.println("--------------------------------------");
         System.out.println("Choose a number");
         System.out.println("1 : Registering customer");
-        System.out.println("2 : Searching room & cancelingBook");
-        System.out.println("3 : Canceling book");
-        System.out.println("4 : Changing book");
+        System.out.println("2 : Searching & Booking room");
+        System.out.println("3 : Cancellation of book");
+        System.out.println("4 : Rescheduling book");
         System.out.println("11: Quit");
         System.out.println("--------------------------------------");
     }
