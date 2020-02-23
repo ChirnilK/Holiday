@@ -7,13 +7,11 @@ import java.util.Scanner;
 
 public class Program {
 
-    SqlConsole sqlConsole = new SqlConsole();
-    SearchingRoom searchingRoom = new SearchingRoom(sqlConsole.getConn());
-    Registration registration = new Registration(sqlConsole.getConn());
-    CancellingRescheduling cancellingRescheduling = new CancellingRescheduling(sqlConsole.getConn());
+    private SqlConsole sqlConsole = new SqlConsole();
+    private SearchingRoom searchingRoom = new SearchingRoom(sqlConsole.getConn());
+    private Registration registration = new Registration(sqlConsole.getConn());
+    private CancellingRescheduling cancellingRescheduling = new CancellingRescheduling(sqlConsole.getConn());
 
-    private Connection conn = null;
-    private PreparedStatement statement;
     private ResultSet resultSet;
 
 
