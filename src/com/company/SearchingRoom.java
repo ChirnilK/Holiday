@@ -182,7 +182,7 @@ public class SearchingRoom {
                     result.add(roomid);
 
                     while (resultSet.next()) {
-                        row = "Hotelroom id: " + resultSet.getInt("hotelroom_id")
+                        row = "Hotel id: " + resultSet.getInt("hotel_id")
                                 + ", Hotel name: " + resultSet.getString("hotel_name")
                                 + ", Room type: " + resultSet.getString("room_type")
                                 + ", Room price/night: " + resultSet.getDouble("room_price_per_night")
@@ -213,10 +213,11 @@ public class SearchingRoom {
         String check_out = (String) result.get(2);
         String roomid = (String) result.get(3);
         int room_id = Integer.parseInt(roomid);
-        System.out.println("Input the Hotelroom-id number for proceeding to book your hotel");
-        System.out.println("==Important== Please input correct Hotelroom-id");
+        System.out.println("Input the Hotel-id number for proceeding to book your hotel");
+        System.out.println("==Important== Please input correct Hotel-id");
         Scanner sc = new Scanner(System.in);
         int hotel_id = sc.nextInt();
+
         System.out.println("Family room and Executive suite room can get extra bed, 500kr/bed.");
         System.out.println("Do you want to have one? y/n");
         System.out.println("(Press 'n' if your room type is not Family room or Executive suite room)");
@@ -226,7 +227,7 @@ public class SearchingRoom {
         System.out.println("Will you have half pension or full pension?");
         System.out.println("h:half pension(500kr/person) / f:full pension(700kr/person) / n: don't need ");
         String pension = booksc.nextLine();
-        int option_id = 0;
+        int option_id = 6;
         if (extrabed.equals("y") && (pension.equals("n"))) {
             option_id = 1;
         } else if (extrabed.equals("y") && (pension.equals("h"))) {
@@ -234,7 +235,7 @@ public class SearchingRoom {
         } else if (extrabed.equals("y") && (pension.equals("f"))) {
             option_id = 5;
         } else if (extrabed.equals("n") && (pension.equals("n"))) {
-            option_id = 0;
+            option_id = 6;
         } else if (extrabed.equals("n") && (pension.equals("h"))) {
             option_id = 2;
         } else if (extrabed.equals("n") && (pension.equals("f"))) {
@@ -249,7 +250,7 @@ public class SearchingRoom {
         System.out.println("Input customer-id");
         int customer_id = booksc.nextInt();
 
-        try {
+        try{
             statement = conn.prepareStatement("INSERT INTO bookings(book_id,customer_id, hotel_id, room_id, option_id," +
                     "number_of_people, check_in, check_out) VALUES (?,?,?,?,?,?,?,?)");
 
@@ -262,11 +263,13 @@ public class SearchingRoom {
             statement.setString(7, check_in);
             statement.setString(8, check_out);
             statement.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return book_id;
     }
+
 
     public ResultSet searchByBookid(int book_id) {
         try {
