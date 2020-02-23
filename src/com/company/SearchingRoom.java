@@ -11,8 +11,8 @@ public class SearchingRoom {
 
 
     private Connection conn;
-    private PreparedStatement statement;
-    private ResultSet resultSet;
+    private PreparedStatement statement = null;
+    private ResultSet resultSet = null;
 
     public SearchingRoom(Connection mainConn) {
         conn = mainConn;
@@ -37,7 +37,7 @@ public class SearchingRoom {
                 }
                 else {
                     if (numberOfPeople > room_id) {
-                        System.out.println("The max people in this room is " + numberOfPeople + " people. Please change room type.");
+                        System.out.println("The max people in this room is " + room_id + " people. Please change room type.");
                     } else {
                         answers.add(String.valueOf(numberOfPeople));
                         answers.add(String.valueOf(room_id));
@@ -46,7 +46,7 @@ public class SearchingRoom {
                         LocalDate checkInDate = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(checkIn));
                         LocalDate startOfSeason = LocalDate.of(2020, 6, 1);
                         if (checkInDate.isBefore(startOfSeason)) {
-                            System.out.println("Please call us later!");
+                            System.out.println("The campaign season is between 2020-06-01 to 2020-07-30!");
                         } else {
                             answers.add(checkIn);
                             System.out.println("When is your check out date? Input ex; 2020-01-30");
@@ -54,7 +54,7 @@ public class SearchingRoom {
                             LocalDate checkOutDate = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(checkOut));
                             LocalDate endOfSeason = LocalDate.of(2020, 7, 30);
                             if (checkOutDate.isAfter(endOfSeason)) {
-                                System.out.println("Sorry! See you next year!");
+                                System.out.println("The campaign season is between 2020-06-01 to 2020-07-30!");
                             } else {
                                 answers.add(checkOut);
                                 System.out.println(" ====== Popular filters  =======");
@@ -65,18 +65,12 @@ public class SearchingRoom {
                                 if (poolAnswer.equals("y")) {
                                     pool = 1;
                                 }
-                                else{
-                                    pool = 0;
-                                }
                                 answers.add(String.valueOf(pool));
                                 System.out.println("Evening entertainment? y/n");
                                 String entertainment = filter.nextLine();
                                 int evening_entertainment = 0;
                                 if (entertainment.equals("y")) {
                                     evening_entertainment = 1;
-                                }
-                                else{
-                                    evening_entertainment = 0;
                                 }
                                 answers.add(String.valueOf(evening_entertainment));
 
@@ -86,18 +80,12 @@ public class SearchingRoom {
                                 if (kids.equals("y")) {
                                     kids_club = 1;
                                 }
-                                else{
-                                    kids_club = 0;
-                                }
                                 answers.add(String.valueOf(kids_club));
                                 System.out.println("Restaurant? y/n");
                                 String eat = filter.nextLine();
                                 int restaurant = 0;
                                 if (eat.equals("y")) {
                                     restaurant = 1;
-                                }
-                                else{
-                                    restaurant = 0;
                                 }
                                 answers.add(String.valueOf(restaurant));
                                 double km_to_beach = 100.0;
@@ -126,11 +114,11 @@ public class SearchingRoom {
 
 
     public ArrayList<String> selectForRooms(ArrayList answers) {
+
         if (answers.size() != 11) {
-            System.out.println("Information is missing");
+            return null;
         } else {
             String numberOfPeople = (String) answers.get(0);
-            int number_of_people = Integer.parseInt(numberOfPeople);
             String roomid = (String) answers.get(1);
             int room_id = Integer.parseInt(roomid);
             String check_in = (String) answers.get(2);
@@ -177,35 +165,43 @@ public class SearchingRoom {
                 e.printStackTrace();
             }
 
+
             String row = "";
             ArrayList<String> result = new ArrayList<>();
 
             try {
-                System.out.println("You can book this/these hotel(s) between " + check_in + " and " + check_out);
-                result.add(numberOfPeople);
-                result.add(check_in);
-                result.add(check_out);
-                result.add(roomid);
-                while (resultSet.next()) {
-                    row = "Hotelroom id: " + resultSet.getInt("hotelroom_id")
-                            + ", Hotel name: " + resultSet.getString("hotel_name")
-                            + ", Room type: " + resultSet.getString("room_type")
-                            + ", Room price/night: " + resultSet.getDouble("room_price_per_night")
-                            + ", Distance to beach: " + resultSet.getDouble("km_to_beach")
-                            + ", Distance to city: " + resultSet.getDouble("km_to_city")
-                            + ", Guest rating: " + resultSet.getInt("guest_rating")
-                            + ", Pool: " + resultSet.getInt("pool")
-                            + ", Evening entertainment: " + resultSet.getInt("evening_entertainment")
-                            + ", Kids club: " + resultSet.getInt("kids_club")
-                            + ", Restaurant: " + resultSet.getInt("restaurant");
-                    System.out.println(row);
+                if (!resultSet.next()){
+                    System.out.println("No searching result. Try it again");
+                    return null;
+
+                } else {
+                    System.out.println("This/these hotel(s) is available between " + check_in + " and " + check_out);
+                    result.add(numberOfPeople);
+                    result.add(check_in);
+                    result.add(check_out);
+                    result.add(roomid);
+
+                    while (resultSet.next()) {
+                        row = "Hotelroom id: " + resultSet.getInt("hotelroom_id")
+                                + ", Hotel name: " + resultSet.getString("hotel_name")
+                                + ", Room type: " + resultSet.getString("room_type")
+                                + ", Room price/night: " + resultSet.getDouble("room_price_per_night")
+                                + ", Distance to beach: " + resultSet.getDouble("km_to_beach")
+                                + ", Distance to city: " + resultSet.getDouble("km_to_city")
+                                + ", Guest rating: " + resultSet.getInt("guest_rating")
+                                + ", Pool: " + resultSet.getInt("pool")
+                                + ", Evening entertainment: " + resultSet.getInt("evening_entertainment")
+                                + ", Kids club: " + resultSet.getInt("kids_club")
+                                + ", Restaurant: " + resultSet.getInt("restaurant");
+                        System.out.println(row);
+                    }
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             return result;
         }
-        return null;
     }
 
 
@@ -217,7 +213,8 @@ public class SearchingRoom {
         String check_out = (String) result.get(2);
         String roomid = (String) result.get(3);
         int room_id = Integer.parseInt(roomid);
-        System.out.println("Input the Hotelroom_id number for proceeding to book your hotel");
+        System.out.println("Input the Hotelroom-id number for proceeding to book your hotel");
+        System.out.println("==Important== Please input correct Hotelroom-id");
         Scanner sc = new Scanner(System.in);
         int hotel_id = sc.nextInt();
         System.out.println("Family room and Executive suite room can get extra bed, 500kr/bed.");
@@ -285,8 +282,8 @@ public class SearchingRoom {
 
     public ArrayList<String > bookingResult(ResultSet resultSet) {
         try {
-            ArrayList<String> result= new ArrayList<>();
-            System.out.println("===== Your booking information =====");
+            ArrayList<String> result = new ArrayList<>();
+            System.out.println("======== Booking information ========");
             while (resultSet.next()) {
                 result.add(String.valueOf(resultSet.getInt("room_id")));
                 result.add(String.valueOf(resultSet.getInt("option_id")));
@@ -366,8 +363,7 @@ public class SearchingRoom {
         System.out.println("====================================");
         System.out.println(" Total price : " + TotalPrice + "Kr ");
         System.out.println("====================================");
-        System.out.println("Thank you!");
-        System.out.println("Have a great trip!");
+
     }
 
 }

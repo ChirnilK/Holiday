@@ -35,93 +35,114 @@ public class Program {
                     String purpose = startProgram();
                     ArrayList answers = searchingRoom.questionsForSearchRoom(purpose);
                     ArrayList result = searchingRoom.selectForRooms(answers);
-                    int booking_id = searchingRoom.bookRoom(result);
-                    resultSet = searchingRoom.searchByBookid(booking_id);
+                    if (result != null) {
+                        int booking_id = searchingRoom.bookRoom(result);
+                        resultSet = searchingRoom.searchByBookid(booking_id);
+                    }
                     if (resultSet != null) {
                         ArrayList forPrice = searchingRoom.bookingResult(resultSet);
                         searchingRoom.bookingTotalPrice(forPrice);
+                        System.out.println("Thank you!");
+                        System.out.println("Have a great trip!");
                     }
                     break;
 
                 case "3":
                     Scanner scan = new Scanner(System.in);
-                    System.out.println("Do you want to cancel your book? y/n");
-                    String answer = scan.nextLine();
-                    if (answer.equals("y")) {
-                        System.out.println("Input book-id");
-                        int cancelBook = Integer.parseInt(scan.nextLine());
-                        resultSet = searchingRoom.searchByBookid(cancelBook);
-                        searchingRoom.bookingResult(resultSet);
-                        System.out.println("");
-                        System.out.println("Is this booking that you want to cancel? y/n");
-                        String book = scan.nextLine();
-                        if (book.equals("y")) {
-                            cancellingRescheduling.deleteBook(cancelBook);
+                    System.out.println("Input book-id that you want to cancel");
+                    System.out.println("== Important == Please input correct book-id");
+                    try {
+                        int cancelBook = Integer.parseInt(scan.nextLine());                           //Input book_id number
+                        resultSet = searchingRoom.searchByBookid(cancelBook);                         //SQL select... return the booking
+                        ArrayList cancel = searchingRoom.bookingResult(resultSet);
+                        if (cancel != null) {
                             System.out.println("");
-                            System.out.println("Your booking was now cancelled");
-                            System.out.println("");
-                            resultSet = cancellingRescheduling.selectBookings();
-                            System.out.println("========== Bookings table ==========");
-                            System.out.println("");
-                            searchingRoom.bookingResult(resultSet);
-
-                        } else if (book.equals("n")) {
-                            break;
+                            System.out.println("Is this booking that you want to cancel? y/n");
+                            String book = scan.nextLine();
+                            if (book.equals("y")) {
+                                cancellingRescheduling.deleteBook(cancelBook);
+                                System.out.println("");
+                                System.out.println("Your booking has been successfully cancelled");
+                                System.out.println("");
+                                resultSet = cancellingRescheduling.selectBookings();
+                                System.out.println("========== Bookings table ==========");
+                                System.out.println("");
+                                searchingRoom.bookingResult(resultSet);
+                            } else {
+                                System.out.println("See you!");
+                            }
                         }
-                    } else {
-                        System.out.println("See you!");
+                    } catch (Exception e) {
+                        System.out.println("Please input correct information");
+                        e.printStackTrace();
                     }
+
                     break;
 
                 case "4":
                     Scanner reschedule = new Scanner(System.in);
+                    System.out.println("Here we can change only your booking dates.");
+                    System.out.println("If you wish other changing, please cancel your booking first,");
+                    System.out.println("then, rebook your hotel.");
                     System.out.println("Do you want to reschedule your book? y/n");
                     String res = reschedule.nextLine();
                     if (res.equals("y")) {
                         System.out.println("Input book-id");
-                        int changeBook = Integer.parseInt(reschedule.nextLine());
-                        resultSet = searchingRoom.searchByBookid(changeBook);
-                        ArrayList book_info = searchingRoom.bookingResult(resultSet);
-                        System.out.println("");
-                        System.out.println("Is this booking that you want to reschedule? y/n");
-                        String change = reschedule.nextLine();
-                        if (change.equals("y")) {
-                            System.out.println("When is your new check-in date? Input ex; 2020-01-30");
-                            String newCheckIn = reschedule.next();
-                            LocalDate newCheckInDate = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(newCheckIn));
-                            LocalDate startOfSeason = LocalDate.of(2020, 6, 1);
-                            if (newCheckInDate.isBefore(startOfSeason)) {
-                                System.out.println("Please call us later!");
-                            } else {
-                                System.out.println("When is your check-out date? Input ex; 2020-01-30");
-                                String newCheckOut = reschedule.next();
-                                LocalDate newCheckOutDate = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(newCheckOut));
-                                LocalDate endOfSeason = LocalDate.of(2020, 7, 30);
-                                if (newCheckOutDate.isAfter(endOfSeason)) {
-                                    System.out.println("Sorry! See you next year!");
+                        try {
+                            int changeBook = Integer.parseInt(reschedule.nextLine());
+                            resultSet = searchingRoom.searchByBookid(changeBook);
+                            ArrayList book_info = searchingRoom.bookingResult(resultSet);
+                            searchingRoom.bookingTotalPrice(book_info);
+                            System.out.println("");
+                            System.out.println("Is this booking that you want to reschedule? y/n");
+                            String change = reschedule.nextLine();
+                            if (change.equals("y")) {
+                                System.out.println("When is your new check-in date? Input ex; 2020-01-30");
+                                String newCheckIn = reschedule.next();
+                                LocalDate newCheckInDate = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(newCheckIn));
+                                LocalDate startOfSeason = LocalDate.of(2020, 6, 1);
+                                if (newCheckInDate.isBefore(startOfSeason)) {
+                                    System.out.println("Please call us later!");
                                 } else {
-                                    cancellingRescheduling.rescheduleCheck(book_info, newCheckIn, newCheckOut);
-                                    System.out.println("Is this ok? y/n");
-                                    Scanner resche = new Scanner(System.in);
-                                    String lastCheck = resche.nextLine();
-                                    if (lastCheck.equals("y")) {
-                                        cancellingRescheduling.reschedule(changeBook, newCheckIn, newCheckOut);
-                                        resultSet = searchingRoom.searchByBookid(changeBook);
-                                        searchingRoom.bookingResult(resultSet);
-                                        break;
-                                    } else if (lastCheck.equals("n")) {
-                                        System.out.println("Please contact us again.");
-                                        break;
+                                    System.out.println("When is your check-out date? Input ex; 2020-01-30");
+                                    String newCheckOut = reschedule.next();
+                                    LocalDate newCheckOutDate = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(newCheckOut));
+                                    LocalDate endOfSeason = LocalDate.of(2020, 7, 30);
+                                    if (newCheckOutDate.isAfter(endOfSeason)) {
+                                        System.out.println("Sorry! See you next year!");
                                     } else {
-                                        break;
+                                        cancellingRescheduling.rescheduleCheck(book_info, newCheckIn, newCheckOut);
+                                        System.out.println("Is this ok? y/n");
+                                        Scanner resche = new Scanner(System.in);
+                                        String lastCheck = resche.nextLine();
+                                        if (lastCheck.equals("y")) {
+                                            cancellingRescheduling.reschedule(changeBook, newCheckIn, newCheckOut);
+                                            resultSet = searchingRoom.searchByBookid(changeBook);
+                                            ArrayList rebook = searchingRoom.bookingResult(resultSet);
+                                            searchingRoom.bookingTotalPrice(rebook);
+                                            System.out.println("Thank you!");
+                                            System.out.println("Have a great trip!");
+                                            break;
+                                        } else if (lastCheck.equals("n")) {
+                                            System.out.println("Call us again if any!");
+                                            break;
+                                        } else {
+                                            break;
+                                        }
                                     }
                                 }
+                            } else {
+                                System.out.println("See you!");
                             }
+                        } catch (Exception e) {
+                            System.out.println("Input correct information");
                         }
-                    }
-                    else{
+                    } else {
                         System.out.println("See you!");
-                        }
+                    } break;
+
+
+
                 case "9":
                     on = false;
                     System.exit(0);
