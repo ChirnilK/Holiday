@@ -172,7 +172,7 @@ public class SearchingRoom {
 
             try {
                 if (!resultSet.next()){
-                    System.out.println("No searching result. Try it again");
+                    System.out.println("There is no results after filtering. Try it again");
                     return null;
 
                 } else {
