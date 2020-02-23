@@ -17,7 +17,7 @@ public class SearchingRoom {
         conn = mainConn;
     }
 
-    public ArrayList<String> searchRoom(String purpose) {
+    public ArrayList<String> searchRoom(String purpose){
         Scanner scanner = new Scanner(System.in);
         System.out.println("=== Searching for your best room ===");
         System.out.println("");

@@ -18,7 +18,7 @@ public class Program {
     private ResultSet resultSet;
 
 
-    public void start() throws IOException {
+    public void start(){
         boolean on = true;
         while (on) {
             adminMenu();
@@ -135,7 +135,7 @@ public class Program {
         }
     }
 
-    private String startProgram() throws IOException {
+    private String startProgram(){
         boolean login = true;
         String purpose = "";
         while (login) {
@@ -180,7 +180,7 @@ public class Program {
     private void adminMenu() {
         System.out.println("");
         System.out.println("--------------------------------------");
-        System.out.println("           Skåne travel               ");
+        System.out.println("       Skåne travel system            ");
         System.out.println("--------------------------------------");
         System.out.println("Choose a number");
         System.out.println("1 : Registering customer");
