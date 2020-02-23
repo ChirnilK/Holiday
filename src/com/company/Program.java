@@ -24,13 +24,13 @@ public class Program {
             Scanner scanner = new Scanner(System.in);
             String choice = scanner.nextLine();
             switch (choice) {
-                case "1":
+                case "1":                 //1 : Registering customer
                     String registeredSocialnr = registration.registerCustomer();
                     resultSet = registration.searchCustomerBySocialSecnr(registeredSocialnr);
                     registration.customerPrintResult(resultSet);
                     break;
 
-                case "2":
+                case "2":                 //2 : Searching & Booking room
                     String purpose = startProgram();
                     ArrayList answers = searchingRoom.questionsForSearchRoom(purpose);
                     ArrayList result = searchingRoom.selectForRooms(answers);
@@ -53,7 +53,7 @@ public class Program {
                     }
                     break;
 
-                case "3":
+                case "3":                       //3 : Cancellation of book
                     Scanner scan = new Scanner(System.in);
                     System.out.println("Input book-id that you want to cancel");
                     System.out.println("== Important == Please input correct book-id");
@@ -85,7 +85,7 @@ public class Program {
 
                     break;
 
-                case "4":
+                case "4":                               //4 : Rescheduling book
                     Scanner reschedule = new Scanner(System.in);
                     System.out.println("Here we can change only your booking dates.");
                     System.out.println("If you wish other changing, please cancel your booking first,");
@@ -149,7 +149,7 @@ public class Program {
 
 
 
-                case "9":
+                case "9":                            //9: Quit
                     on = false;
                     System.exit(0);
                     break;
@@ -170,13 +170,13 @@ public class Program {
             String choice = scanner.nextLine();
 
             switch (choice) {
-                case "1":
+                case "1":                             //1: Beach holidays
                     String beach = "Beach";
                     purpose = beach;
                     break;
 
                 case "2":
-                    String urban = "Urban";
+                    String urban = "Urban";           //2: Urban trip
                     purpose = urban;
                     break;
 

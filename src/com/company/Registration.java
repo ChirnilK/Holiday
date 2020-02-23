@@ -16,7 +16,7 @@ public class Registration {
         conn = mainConn;
     }
 
-    public String registerCustomer() {
+    public String registerCustomer() {                      // register new customer in the customers table. return social security number that is input
         Scanner scanner = new Scanner(System.in);
         System.out.println("Customer's name?");
         String customer_name = scanner.nextLine();
@@ -37,7 +37,7 @@ public class Registration {
     }
 
 
-    public ResultSet searchCustomerBySocialSecnr(String social_secnr) {
+    public ResultSet searchCustomerBySocialSecnr(String social_secnr) {  //using the social-sec-number, get that customer's info.
         try {
             statement = conn.prepareStatement("SELECT * FROM customers WHERE social_secnr=?");
             statement.setString(1, social_secnr);
@@ -49,7 +49,7 @@ public class Registration {
     }
 
 
-    public void customerPrintResult(ResultSet resultSet) {
+    public void customerPrintResult(ResultSet resultSet) {            //print out the new customer's info
         try {
             while (resultSet.next()) {
                 String row = "Customer_id: " + resultSet.getInt("customer_id")

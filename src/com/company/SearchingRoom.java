@@ -57,6 +57,7 @@ public class SearchingRoom {
                             } else {
                                 answers.add(checkOut);
                                 System.out.println(" ====== Popular filters  =======");
+                                System.out.println("Input y if you think it's important to have");
                                 System.out.println("Pool? y/n");
                                 Scanner filter = new Scanner(System.in);
                                 String poolAnswer = filter.nextLine();
@@ -87,6 +88,7 @@ public class SearchingRoom {
                                     restaurant = 1;
                                 }
                                 answers.add(String.valueOf(restaurant));
+
                                 double km_to_beach = 100.0;
                                 double km_to_city = 100.0;
                                 if (purpose.equals("Beach")) {
@@ -144,7 +146,8 @@ public class SearchingRoom {
                         "and restaurant >= ? and  guest_rating >= ?\n" +
                         "and km_to_beach <= ? and km_to_city <= ?\n" +
                         "group by hotelroom_id\n" +
-                        "HAVING check_in IS NULL OR check_out <= ? OR check_in >= ?;");
+                        "HAVING check_in IS NULL OR check_out <= ? OR check_in >= ?\n" +
+                        "order by guest_rating desc;");
 
 
                 statement.setInt(1, room_id);
@@ -175,12 +178,14 @@ public class SearchingRoom {
 
                 } else {
                     System.out.println("This/these hotel(s) is available between " + check_in + " and " + check_out);
+                    System.out.println("The result is sorted descending by guest-rating");
+                    System.out.println("");
                     result.add(numberOfPeople);
                     result.add(check_in);
                     result.add(check_out);
                     result.add(roomid);
 
-                    while (resultSet.next()) {
+                    while (resultSet.next()) { ;
                         row = "Hotel id: " + resultSet.getInt("hotel_id")
                                 + ", Hotel name: " + resultSet.getString("hotel_name")
                                 + ", Room type: " + resultSet.getString("room_type")
