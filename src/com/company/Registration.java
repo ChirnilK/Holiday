@@ -19,7 +19,8 @@ public class Registration {
     public String registerCustomer() {                      // register new customer in the customers table. return social security number that is input
         Scanner scanner = new Scanner(System.in);
         System.out.println("Customer's name?");
-        String customer_name = scanner.nextLine();
+        String name = scanner.nextLine();
+        String customer_name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
         System.out.println("Input social security number");
         String social_secnr = scanner.nextLine();
         System.out.println("And phone number");
