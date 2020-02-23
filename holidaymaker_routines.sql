@@ -100,29 +100,6 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
--- Temporary table structure for view `all_room_with_options`
---
-
-DROP TABLE IF EXISTS `all_room_with_options`;
-/*!50001 DROP VIEW IF EXISTS `all_room_with_options`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `all_room_with_options` AS SELECT 
- 1 AS `hotelroom_id`,
- 1 AS `hotel_id`,
- 1 AS `hotel_name`,
- 1 AS `room_type`,
- 1 AS `room_id`,
- 1 AS `km_to_beach`,
- 1 AS `km_to_city`,
- 1 AS `guest_rating`,
- 1 AS `pool`,
- 1 AS `evening_entertainment`,
- 1 AS `kids_club`,
- 1 AS `restaurant`*/;
-SET character_set_client = @saved_cs_client;
-
---
 -- Final view structure for view `all_room_booked_and_unbooked`
 --
 
@@ -177,24 +154,6 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
--- Final view structure for view `all_room_with_options`
---
-
-/*!50001 DROP VIEW IF EXISTS `all_room_with_options`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `all_room_with_options` AS select `hotelrooms`.`hotelroom_id` AS `hotelroom_id`,`hotels`.`hotel_id` AS `hotel_id`,`hotels`.`hotel_name` AS `hotel_name`,`rooms`.`room_type` AS `room_type`,`rooms`.`room_id` AS `room_id`,`hotels`.`km_to_beach` AS `km_to_beach`,`hotels`.`km_to_city` AS `km_to_city`,`hotels`.`guest_rating` AS `guest_rating`,`hotels`.`pool` AS `pool`,`hotels`.`evening_entertainment` AS `evening_entertainment`,`hotels`.`kids_club` AS `kids_club`,`hotels`.`restaurant` AS `restaurant` from ((`hotelrooms` left join `rooms` on((`hotelrooms`.`room` = `rooms`.`room_id`))) left join `hotels` on((`hotelrooms`.`hotel` = `hotels`.`hotel_id`))) order by `hotelrooms`.`hotelroom_id` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
 -- Dumping events for database 'holidaymaker'
 --
 
@@ -211,4 +170,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-02-23 19:35:34
+-- Dump completed on 2020-02-23 21:04:30
