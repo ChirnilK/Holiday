@@ -10,7 +10,6 @@ public class Registration {
 
     private Connection conn;
     private PreparedStatement statement;
-    private ResultSet resultSet;
 
     public Registration(Connection mainConn) {
         conn = mainConn;
