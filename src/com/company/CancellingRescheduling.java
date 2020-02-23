@@ -14,7 +14,7 @@ public class CancellingRescheduling {
         conn = mainConn;
     }
 
-    public void deleteBook(int book_id){
+    public void deleteBook(int book_id){                         //delete a booking
         try {
             statement = conn.prepareStatement("delete from bookings where book_id = ?");
             statement.setInt(1, book_id);
@@ -24,7 +24,7 @@ public class CancellingRescheduling {
         }
     }
 
-    public ResultSet selectBookings() {
+    public ResultSet selectBookings() {                   //show all bookings
         try {
             statement = conn.prepareStatement("SELECT * FROM bookings");
             return statement.executeQuery();
@@ -34,7 +34,7 @@ public class CancellingRescheduling {
         }
     }
 
-    public void rescheduleCheck(ArrayList info, String checkIn, String checkOut){
+    public void rescheduleCheck(ArrayList info, String checkIn, String checkOut){        //for reschedule
         System.out.println("");
         String  hotelid = (String) info.get(5);
         int hotel_id = Integer.parseInt(hotelid);
@@ -81,7 +81,7 @@ public class CancellingRescheduling {
         }
     }
 
-    public void reschedule(int book_id, String checkIn, String checkOut) {
+    public void reschedule(int book_id, String checkIn, String checkOut) {    //update(reschedule) booking
 
         try {
             statement = conn.prepareStatement("update bookings set check_in = ? , check_out = ? where book_id = ?;");
