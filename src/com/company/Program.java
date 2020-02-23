@@ -1,5 +1,4 @@
 package com.company;
-import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -35,11 +34,18 @@ public class Program {
                     String purpose = startProgram();
                     ArrayList answers = searchingRoom.questionsForSearchRoom(purpose);
                     ArrayList result = searchingRoom.selectForRooms(answers);
-                    if (result != null) {
+                    if (result==null){
+                        break;
+                    }
+                    else{
                         int booking_id = searchingRoom.bookRoom(result);
                         resultSet = searchingRoom.searchByBookid(booking_id);
                     }
-                    if (resultSet != null) {
+
+                    if(resultSet==null){
+                        break;
+                    }
+                    else{
                         ArrayList forPrice = searchingRoom.bookingResult(resultSet);
                         searchingRoom.bookingTotalPrice(forPrice);
                         System.out.println("Thank you!");

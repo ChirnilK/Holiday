@@ -4,7 +4,6 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class SearchingRoom {
@@ -328,6 +327,9 @@ public class SearchingRoom {
         var diff = Math.abs(check_out.getTime() - check_in.getTime());
 
         var howManyDays = Math.ceil(diff/(1000 * 3600 * 24));
+        if (howManyDays==0){
+            howManyDays=1;
+        }
 
         double roomFee = 0;
         if (room_id == 1 || room_id == 2) {
