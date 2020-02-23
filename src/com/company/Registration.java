@@ -38,7 +38,7 @@ public class Registration {
     }
 
 
-    public ResultSet searchBySocialSecnr(String social_secnr) {
+    public ResultSet searchCustomerBySocialSecnr(String social_secnr) {
         try {
             statement = conn.prepareStatement("SELECT * FROM customers WHERE social_secnr=?");
             statement.setString(1, social_secnr);
@@ -50,13 +50,13 @@ public class Registration {
     }
 
 
-    public void printResult(ResultSet resultSet) {
+    public void customerPrintResult(ResultSet resultSet) {
         try {
             while (resultSet.next()) {
                 String row = "Customer_id: " + resultSet.getInt("customer_id")
-                        + ", Name: " + resultSet.getString("customer_name")
-                        + ", Social security number: " + resultSet.getString("social_secnr")
-                        + ", Phone number: " + resultSet.getString("telephonenr") + ".";
+                        + ",  Name: " + resultSet.getString("customer_name")
+                        + ",  Social security number: " + resultSet.getString("social_secnr")
+                        + ",  Phone number: " + resultSet.getString("telephonenr") + ".";
                 System.out.println(row);
             }
         } catch (Exception ex) {

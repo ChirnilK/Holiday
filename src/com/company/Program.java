@@ -27,15 +27,14 @@ public class Program {
             switch (choice) {
                 case "1":
                     String registeredSocialnr = registration.registerCustomer();
-                    resultSet = registration.searchBySocialSecnr(registeredSocialnr);
-                    if (resultSet != null) {
-                        registration.printResult(resultSet);
-                    }
+                    resultSet = registration.searchCustomerBySocialSecnr(registeredSocialnr);
+                    registration.customerPrintResult(resultSet);
                     break;
 
                 case "2":
                     String purpose = startProgram();
-                    ArrayList result = searchingRoom.searchRoom(purpose);
+                    ArrayList answers = searchingRoom.questionsForSearchRoom(purpose);
+                    ArrayList result = searchingRoom.selectForRooms(answers);
                     int booking_id = searchingRoom.bookRoom(result);
                     resultSet = searchingRoom.searchByBookid(booking_id);
                     if (resultSet != null) {
